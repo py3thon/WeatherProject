@@ -12,6 +12,6 @@ export default function ReloadIcon({ load }) {
 
 const styles = StyleSheet.create({
   icon: {
-    flex: 1
+    flex: 1,
   },
 })

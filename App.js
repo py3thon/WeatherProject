@@ -10,16 +10,19 @@ import WeatherDetails from './components/WeatherDetails'
 
 const WEATHER_API_KEY = 'f51934130452d9c3e07bd32cfb0f95ff'
 const BASE_WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather?'
-export default function App() {
 
+export default function App() {
   const colorScheme = useColorScheme();
   const themeContainerStyle =
     colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
+  const themeTextStyle =
+    colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [currentWeather, setCurrentWeather] = useState(null)
   const [unitSystem, setUnitSystem] = useState('metric')
   const [value, onChangeText] = useState('')
+
   useEffect(() => {
     load()
   }, [unitSystem])
@@ -30,7 +33,7 @@ export default function App() {
       try {
         let { status } = await Location.requestForegroundPermissionsAsync()
         if (status !== 'granted') {
-          setErrorMessage("Acces to loaction is needed to run this app")
+          setErrorMessage("Access to loaction is needed to run this app")
           return
         }
         const location = await Location.getCurrentPositionAsync({
@@ -44,6 +47,7 @@ export default function App() {
         const response = await fetch(weatherUrl)
 
         const result = await response.json()
+
         if (response.ok) {
           setCurrentWeather(result)
         } else {
@@ -59,9 +63,9 @@ export default function App() {
         const result = await response.json()
         if (response.ok) {
           setCurrentWeather(result)
-          onChangeText('')
         } else {
           setErrorMessage(result.message)
+          onChangeText('')
         }
       } catch (error) {
       }
@@ -69,13 +73,15 @@ export default function App() {
   }
 
   if (currentWeather) {
-
     return (
       <View style={styles.container, themeContainerStyle}>
         <StatusBar style="auto" />
-        <TextInput style={{ textAlign: 'center', backgroundColor: 'lightgrey', borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopRightRadius: 5, borderTopLeftRadius: 5, height: 25, width: 300, marginTop: 50, borderColor: 'gray', borderWidth: 0 }} onChangeText={text => onChangeText(text)}
-          value={value} placeholder={'Enter a place...'}
-          onSubmitEditing={load} />
+        <TextInput style={themeTextStyle}
+          onChangeText={text => onChangeText(text)}
+          value={value}
+          placeholder={'Enter a place...'}
+          onSubmitEditing={load}
+        />
         <View style={styles.main}>
           <UnitsPicker unitSystem={unitSystem} setUnitSystem={setUnitSystem} />
           <WeatherInfo currentWeather={currentWeather} />
@@ -85,15 +91,18 @@ export default function App() {
         <ScrollView contentContainerStyle={styles.container}>
           <WeatherDetails currentWeather={currentWeather} unitSystem={unitSystem} />
         </ScrollView>
-
       </View>
-
-
     )
   } else if (errorMessage) {
     return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>{errorMessage}</Text>
+      <View style={{
+        marginTop: '50%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <Text >{errorMessage}</Text>
+        <ReloadIcon load={load} />
         <StatusBar style="auto" />
       </View>
     )
@@ -104,31 +113,28 @@ export default function App() {
         <StatusBar style="auto" />
       </View>
     )
-
   }
-
-
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   main: {
     justifyContent: 'center',
     flexDirection: 'row',
-    marginTop: 30
+    marginTop: 30,
   },
   line: {
     color: 'lightgray',
     paddingTop: 10,
-    marginBottom: 0
+    marginBottom: 0,
   },
   body: {
     position: 'relative',
-    marginTop: 20
+    marginTop: 20,
   },
   lightContainer: {
     flex: 1,
@@ -141,5 +147,31 @@ const styles = StyleSheet.create({
     backgroundColor: '#242c40',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  lightThemeText: {
+    textAlign: 'center',
+    backgroundColor: 'lightgrey',
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5,
+    height: 25,
+    width: 300,
+    marginTop: 50,
+    borderColor: 'gray',
+    borderWidth: 0,
+  },
+  darkThemeText: {
+    textAlign: 'center',
+    backgroundColor: 'purple',
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5,
+    height: 25,
+    width: 300,
+    marginTop: 50,
+    borderColor: 'gray',
+    borderWidth: 0,
   },
 });

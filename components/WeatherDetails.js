@@ -1,10 +1,10 @@
 import React from 'react'
-import { View, Text, StyleSheet, Button, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { colors } from '../utils/index'
 import { FontAwesome5, MaterialCommunityIcons, MaterialIcons, Feather, Ionicons } from '@expo/vector-icons'
 const { PRIMARY_COLOR, SECONDARY_COLOR, BORDER_COLOR } = colors
-export default function WeatherDetails({ currentWeather, unitSystem }) {
 
+export default function WeatherDetails({ currentWeather, unitSystem }) {
 	const {
 		main: { feels_like, humidity, pressure, temp_min, temp_max },
 		wind: { speed },
@@ -12,15 +12,15 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 		sys: { sunrise, sunset },
 		timezone
 	} = currentWeather
+
 	const convertTime = (utc, timezone) => {
-		//const time = utc;
-		//const date = new Date(time * 1000);
 		const date = new Date(((utc * 1000) + (timezone * 1000)) - 28800000);
-		const timestr = date.toLocaleTimeString();
+		const timestr = date.toLocaleTimeString('en-US');
 		return timestr
 	}
 
 	const windSpeed = unitSystem === 'metric' ? `${Math.round(speed)} m/s` : `${Math.round(speed)} miles/hour`
+
 	return (
 		<ScrollView>
 			<View style={styles.weatherDetailsRow}>
@@ -116,6 +116,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 		</ScrollView>
 	)
 }
+
 const styles = StyleSheet.create({
 	weatherDetails: {
 		marginTop: 'auto',
@@ -126,24 +127,23 @@ const styles = StyleSheet.create({
 	},
 	line: {
 		color: 'lightgrey',
-		margin: 5
+		margin: 5,
 	},
 
 	weatherDetailsBox: {
 		flex: 1,
 		flexDirection: 'row',
-		alignItems: 'center'
-
+		alignItems: 'center',
 	},
 	textSecond: {
 		fontSize: 15,
 		margin: 1,
 		fontWeight: "700",
-		color: SECONDARY_COLOR
+		color: SECONDARY_COLOR,
 	},
 	detailText: {
 		fontSize: 25,
 		marginLeft: 35,
-		color: 'dimgray'
+		color: 'dimgray',
 	},
 })

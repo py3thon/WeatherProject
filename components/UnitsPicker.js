@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Picker } from '@react-native-community/picker'
+
 export default function UnitsPicker({ unitSystem, setUnitSystem }) {
     return (
         <View style={styles.unit}>
@@ -10,11 +11,11 @@ export default function UnitsPicker({ unitSystem, setUnitSystem }) {
             </Picker>
         </View>
     )
-
 }
+
 const styles = StyleSheet.create({
     unit: {
         flex: 1,
-        marginLeft: 10
+        marginLeft: 10,
     },
 })
