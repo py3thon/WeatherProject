@@ -4,7 +4,41 @@ import { colors } from '../utils/index'
 import { FontAwesome5, MaterialCommunityIcons, MaterialIcons, Feather, Ionicons } from '@expo/vector-icons'
 const { PRIMARY_COLOR, SECONDARY_COLOR, BORDER_COLOR } = colors
 
-export default function WeatherDetails({ currentWeather, unitSystem }) {
+import * as Localization from 'expo-localization';
+import i18n from 'i18n-js';
+
+i18n.translations = {
+	en: {
+		riseTime: 'Sunrise Time',
+		setTime: 'Sunset Time',
+		feelsLike: 'Feels Like',
+		maxTemp: 'Max Temp',
+		minTemp: 'Min Temp',
+		visibility: 'Visibility',
+		humidity: 'Humidity',
+		windSpeed: 'Wind Speed',
+		pressure: 'Pressure'
+	},
+	cn: {
+		riseTime: '日出時間',
+		setTime: '日落時間',
+		feelsLike: '裸露皮膚感覺溫度',
+		maxTemp: '最高溫度',
+		minTemp: '最低溫度',
+		visibility: '能見度',
+		humidity: '濕度',
+		windSpeed: '風速',
+		pressure: '大氣壓強'
+	}
+};
+
+i18n.locale = Localization.locale;
+i18n.fallbacks = true;
+
+export default function WeatherDetails({ currentWeather, unitSystem, language}) {
+
+	i18n.locale = language;
+
 	const {
 		main: { feels_like, humidity, pressure, temp_min, temp_max },
 		wind: { speed },
@@ -26,7 +60,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			<View style={styles.weatherDetailsRow}>
 				<View style={styles.weatherDetailsBox}>
 					<Feather name="sunrise" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> Sunrise time : </Text>
+					<Text style={styles.textSecond}> {i18n.t('riseTime')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{convertTime(sunrise, timezone)}</Text>
@@ -36,7 +70,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			<View style={styles.weatherDetailsRow}>
 				<View style={styles.weatherDetailsBox}>
 					<Feather name="sunset" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> Sunset time : </Text>
+					<Text style={styles.textSecond}> {i18n.t('setTime')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{convertTime(sunset, timezone)}</Text>
@@ -46,7 +80,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			<View style={styles.weatherDetailsRow}>
 				<View style={styles.weatherDetailsBox}>
 					<Ionicons name="body" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> Feels like : </Text>
+					<Text style={styles.textSecond}> {i18n.t('feelsLike')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{feels_like}°</Text>
@@ -56,7 +90,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			<View style={styles.weatherDetailsRow}>
 				<View style={styles.weatherDetailsBox}>
 					<FontAwesome5 name="temperature-high" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> Max temp : </Text>
+					<Text style={styles.textSecond}> {i18n.t('maxTemp')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{temp_max}°</Text>
@@ -66,7 +100,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			<View style={styles.weatherDetailsRow}>
 				<View style={styles.weatherDetailsBox}>
 					<FontAwesome5 name="temperature-low" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> Min temp : </Text>
+					<Text style={styles.textSecond}> {i18n.t('minTemp')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{temp_min}°</Text>
@@ -76,7 +110,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			<View style={styles.weatherDetailsRow}>
 				<View style={styles.weatherDetailsBox}>
 					<MaterialIcons name="visibility" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> Visibility : </Text>
+					<Text style={styles.textSecond}> {i18n.t('visibility')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{visibility / 1000} Km</Text>
@@ -86,7 +120,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			<View>
 				<View style={styles.weatherDetailsBox}>
 					<MaterialCommunityIcons name="water" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> Humidity : </Text>
+					<Text style={styles.textSecond}> {i18n.t('humidity')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{humidity}%</Text>
@@ -95,7 +129,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			</View>
 			<View style={styles.weatherDetailsBox}>
 				<MaterialCommunityIcons name="weather-windy" size={30} color={PRIMARY_COLOR} />
-				<Text style={styles.textSecond}> Wind Speed : </Text>
+				<Text style={styles.textSecond}> {i18n.t('windSpeed')} : </Text>
 			</View>
 			<View>
 				<View>
@@ -106,7 +140,7 @@ export default function WeatherDetails({ currentWeather, unitSystem }) {
 			<View>
 				<View style={styles.weatherDetailsBox}>
 					<MaterialCommunityIcons name="speedometer" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> Pressure : </Text>
+					<Text style={styles.textSecond}> {i18n.t('pressure')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{pressure} hpa</Text>
