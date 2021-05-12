@@ -1,29 +1,36 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, TextInput, useColorScheme } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, TextInput, useColorScheme, SafeAreaView, Alert } from 'react-native';
 import * as Location from 'expo-location'
 import WeatherInfo from './components/WeatherInfo'
 import UnitsPicker from './components/UnitsPicker'
 import ReloadIcon from './components/ReloadIcon'
 import { colors } from './utils/index'
 import WeatherDetails from './components/WeatherDetails'
-import LanguagePicker from './components/LanguagePicker'
 
 const WEATHER_API_KEY = 'f51934130452d9c3e07bd32cfb0f95ff'
 const BASE_WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather?'
-
 export default function App() {
+
   const colorScheme = useColorScheme();
   const themeContainerStyle =
     colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
-  const themeTextStyle =
-    colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [currentWeather, setCurrentWeather] = useState(null)
   const [unitSystem, setUnitSystem] = useState('metric')
   const [value, onChangeText] = useState('')
-  const [language, setLanguage] = useState('en')
+  const [output, setOutput] = useState('');
+
+  const createCancelableButtonAlert = (errorText) =>
+    Alert.alert(
+      "Error happened!",
+      errorText,
+      [
+        { text: "CLOSE", onPress: () => setOutput("CLOSE") }
+      ]
+    );
+
 
   useEffect(() => {
     load()
@@ -49,7 +56,6 @@ export default function App() {
         const response = await fetch(weatherUrl)
 
         const result = await response.json()
-
         if (response.ok) {
           setCurrentWeather(result)
         } else {
@@ -65,6 +71,7 @@ export default function App() {
         const result = await response.json()
         if (response.ok) {
           setCurrentWeather(result)
+          //onChangeText('')
         } else {
           setErrorMessage(result.message)
           onChangeText('')
@@ -75,38 +82,40 @@ export default function App() {
   }
 
   if (currentWeather) {
+
     return (
-      <View style={styles.container, themeContainerStyle}>
-        <StatusBar style="auto" />
-        <TextInput style={themeTextStyle}
-          onChangeText={text => onChangeText(text)}
-          value={value}
-          placeholder={'Enter a place...'}
-          onSubmitEditing={load}
-        />
-        <LanguagePicker language={language} setLanguage={setLanguage} />
-        <View style={styles.main}>
-          <UnitsPicker unitSystem={unitSystem} setUnitSystem={setUnitSystem} />
-          <WeatherInfo currentWeather={currentWeather} />
-          <ReloadIcon load={load} />
+      
+        <View style={styles.container, themeContainerStyle}>
+          <StatusBar style="auto" />
+          <TextInput style={{ textAlign: 'center', backgroundColor: 'lightgrey', borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopRightRadius: 5, borderTopLeftRadius: 5, height: 25, width: 300, marginTop: 60, borderColor: 'gray', borderWidth: 0 }} onChangeText={text => onChangeText(text)}
+            value={value} placeholder={'Enter a place...'}
+            onSubmitEditing={load} />
+          <View style ={styles.main}>
+            <UnitsPicker unitSystem={unitSystem} setUnitSystem={setUnitSystem} />
+            <WeatherInfo currentWeather={currentWeather} />
+            <ReloadIcon load={load} />
+          </View>
+          <Text style={styles.line}>──────────────────────────</Text>
+          <ScrollView>
+            <ScrollView contentContainerStyle={styles.container}>
+              <WeatherDetails currentWeather={currentWeather} unitSystem={unitSystem} />
+            </ScrollView>
+
+
+
+          </ScrollView>
+
         </View>
-        <Text style={styles.line}>──────────────────────────</Text>
-        <ScrollView contentContainerStyle={styles.container}>
-          <WeatherDetails currentWeather={currentWeather} unitSystem={unitSystem} language={language}/>
-        </ScrollView>
-      </View>
+     
+
+
     )
   } else if (errorMessage) {
     return (
-      <View style={{
-        marginTop: '50%',
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <Text >{errorMessage}</Text>
-        <ReloadIcon load={load} />
-        <StatusBar style="auto" />
+      <View style={styles.container}>
+		<StatusBar style="auto" />
+		<Text>{errorMessage}</Text>
+		<ReloadIcon load={load} />
       </View>
     )
   } else {
@@ -116,28 +125,31 @@ export default function App() {
         <StatusBar style="auto" />
       </View>
     )
-  }
-}
 
+  }
+
+
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    //backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   main: {
-    justifyContent: 'center',
     flexDirection: 'row',
-    marginTop: 30,
+    marginTop: 30
+
   },
   line: {
     color: 'lightgray',
     paddingTop: 10,
-    marginBottom: 0,
+    marginBottom: 0
   },
   body: {
     position: 'relative',
-    marginTop: 20,
+    marginTop: 20
   },
   lightContainer: {
     flex: 1,
@@ -150,31 +162,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#242c40',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  lightThemeText: {
-    textAlign: 'center',
-    backgroundColor: 'lightgrey',
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
-    borderTopRightRadius: 5,
-    borderTopLeftRadius: 5,
-    height: 25,
-    width: 300,
-    marginTop: 50,
-    borderColor: 'gray',
-    borderWidth: 0,
-  },
-  darkThemeText: {
-    textAlign: 'center',
-    backgroundColor: 'purple',
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
-    borderTopRightRadius: 5,
-    borderTopLeftRadius: 5,
-    height: 25,
-    width: 300,
-    marginTop: 50,
-    borderColor: 'gray',
-    borderWidth: 0,
   },
 });
