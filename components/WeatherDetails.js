@@ -22,20 +22,20 @@ i18n.translations = {
 	cn: {
 		riseTime: '日出時間',
 		setTime: '日落時間',
-		feelsLike: '裸露皮膚感覺溫度',
+		feelsLike: '體感溫度',
 		maxTemp: '最高溫度',
 		minTemp: '最低溫度',
 		visibility: '能見度',
 		humidity: '濕度',
 		windSpeed: '風速',
-		pressure: '大氣壓強'
+		pressure: '氣壓'
 	}
 };
 
 i18n.locale = Localization.locale;
 i18n.fallbacks = true;
 
-export default function WeatherDetails({ currentWeather, unitSystem, language}) {
+export default function WeatherDetails({ currentWeather, unitSystem, language }) {
 
 	i18n.locale = language;
 

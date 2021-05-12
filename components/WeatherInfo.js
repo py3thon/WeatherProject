@@ -28,10 +28,10 @@ export default function WeatherInfo({ currentWeather }) {
     return (
         <View style={styles.weatherInfo}>
             <Text style={themeTextStyle}>{name}</Text>
-            <Text style={styles.currentTimeText,themeTextStyle}>{currentTime(timezone)}</Text>
+            <Text style={styles.currentTimeText, themeTextStyle}>{currentTime(timezone)}</Text>
             <Image style={styles.weatherIcon} source={{ uri: iconUrl }} />
             <Text style={styles.textPrimary}>{temp}°</Text>
-            <Text style={styles.weatherDescription,themeTextStyle}>{description}</Text>
+            <Text style={styles.weatherDescription, themeTextStyle}>{description}</Text>
             <Text style={styles.textSecondary}>{main}</Text>
         </View>
     )
@@ -40,8 +40,6 @@ export default function WeatherInfo({ currentWeather }) {
 const styles = StyleSheet.create({
     weatherInfo: {
         alignItems: 'center',
-        justifyContent: 'center',
-        flex: 2,
     },
     weatherDescription: {
         textTransform: "uppercase",

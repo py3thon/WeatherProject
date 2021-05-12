@@ -92,21 +92,16 @@ export default function App() {
         </View>
         <Text style={styles.line}>──────────────────────────</Text>
         <ScrollView contentContainerStyle={styles.container}>
-          <WeatherDetails currentWeather={currentWeather} unitSystem={unitSystem} language={language}/>
+          <WeatherDetails currentWeather={currentWeather} unitSystem={unitSystem} language={language} />
         </ScrollView>
       </View>
     )
   } else if (errorMessage) {
     return (
-      <View style={{
-        marginTop: '50%',
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <Text >{errorMessage}</Text>
-        <ReloadIcon load={load} />
+      <View style={styles.container}>
         <StatusBar style="auto" />
+        <Text>{errorMessage}</Text>
+        <ReloadIcon load={load} />
       </View>
     )
   } else {
@@ -126,7 +121,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   main: {
-    justifyContent: 'center',
     flexDirection: 'row',
     marginTop: 30,
   },
