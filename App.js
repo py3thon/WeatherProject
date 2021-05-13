@@ -22,16 +22,6 @@ export default function App() {
   const [value, onChangeText] = useState('')
   const [output, setOutput] = useState('');
 
-  const createCancelableButtonAlert = (errorText) =>
-    Alert.alert(
-      "Error happened!",
-      errorText,
-      [
-        { text: "CLOSE", onPress: () => setOutput("CLOSE") }
-      ]
-    );
-
-
   useEffect(() => {
     load()
   }, [unitSystem])
