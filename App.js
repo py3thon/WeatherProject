@@ -25,9 +25,6 @@ export default function App() {
   const [value, onChangeText] = useState('')
   const [language, setLanguage] = useState('en')
 
-
-  const [place, setPlace] = useState('')
-
   const [refreshing, setRefreshing] = React.useState(false);
 
   const wait = (timeout) => {
@@ -46,7 +43,6 @@ export default function App() {
   }, [unitSystem])
 
   async function load() {
-    setPlace(value)
     setCurrentWeather(null)
     setErrorMessage(null)
     if (value == '') {
@@ -90,9 +86,6 @@ export default function App() {
         const result = await response.json()
         if (response.ok) {
           setCurrentWeather(result)
-          
-          console.log("value = " + value)
-          console.log("place = " + place)
         } else {
           setErrorMessage(result.message)
           Alert.alert(
@@ -110,6 +103,9 @@ export default function App() {
   }
 
   if (currentWeather) {
+    function tranmit(text) {
+      onChangeText(text)
+    }
     return (
       <View style={styles.container, themeContainerStyle}>
         <ScrollView contentContainerStyle={styles.container}
@@ -121,7 +117,7 @@ export default function App() {
           }>
           <StatusBar style="auto" />
           <TextInput style={themeTextStyle}
-            onChangeText={text => onChangeText(text)}
+            onChangeText={text => tranmit(text)}
             value={value}
             placeholder={'Enter a place...'}
             onSubmitEditing={load}
