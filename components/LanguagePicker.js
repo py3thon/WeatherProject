@@ -16,6 +16,5 @@ export default function UnitsPicker({ language, setLanguage }) {
 const styles = StyleSheet.create({
     unit: {
         flex: 1,
-        //marginTop: 120
     },
 })

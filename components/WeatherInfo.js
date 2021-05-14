@@ -35,16 +35,7 @@ export default function WeatherInfo({ currentWeather }) {
     const currentTime = (timezone, key) => {
         const current = new Date();
         const date = new Date((current.getTime() + (timezone * 1000)) + (current.getTimezoneOffset() * 1000 * 60));
-        /* var localTime = current.getTime()
-         var localOffset = current.getTimezoneOffset() * 60000
-         var utc = localTime + localOffset
-         var atlanta = utc + (1000 * timezone)
-         var date = new Date(atlanta)*/
 
-        //console.log(current.toLocaleString())
-        //console.log(date.toLocaleString())
-        //console.log(current.getTimezoneOffset())
-        
         let result = "@@@";
         if (key == "week") {
             result = weekday[date.getDay()]

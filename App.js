@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, TextInput, useColorScheme, Alert, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, TextInput, useColorScheme, RefreshControl } from 'react-native';
 import * as Location from 'expo-location'
 import WeatherInfo from './components/WeatherInfo'
 import UnitsPicker from './components/UnitsPicker'
@@ -68,13 +68,6 @@ export default function App() {
           setCurrentWeather(result)
         } else {
           setErrorMessage(result.message)
-          Alert.alert(
-            "Error Occur !",
-            result.message,
-            [
-              { text: "Close" }
-            ]
-          );
         }
       } catch (error) {
       }
@@ -88,13 +81,6 @@ export default function App() {
           setCurrentWeather(result)
         } else {
           setErrorMessage(result.message)
-          Alert.alert(
-            "Error Occur !",
-            result.message,
-            [
-              { text: "Close" }
-            ]
-          );
           onChangeText('')
         }
       } catch (error) {
