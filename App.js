@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, TextInput, useColorScheme } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, TextInput, useColorScheme, Alert, RefreshControl } from 'react-native';
 import * as Location from 'expo-location'
 import WeatherInfo from './components/WeatherInfo'
 import UnitsPicker from './components/UnitsPicker'
@@ -25,10 +25,28 @@ export default function App() {
   const [value, onChangeText] = useState('')
   const [language, setLanguage] = useState('en')
 
+
+  const [place, setPlace] = useState('')
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    onChangeText(value)
+    load();
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   useEffect(() => {
     load()
   }, [unitSystem])
+
   async function load() {
+    setPlace(value)
     setCurrentWeather(null)
     setErrorMessage(null)
     if (value == '') {
@@ -54,6 +72,13 @@ export default function App() {
           setCurrentWeather(result)
         } else {
           setErrorMessage(result.message)
+          Alert.alert(
+            "Error Occur !",
+            result.message,
+            [
+              { text: "Close" }
+            ]
+          );
         }
       } catch (error) {
       }
@@ -65,8 +90,18 @@ export default function App() {
         const result = await response.json()
         if (response.ok) {
           setCurrentWeather(result)
+          
+          console.log("value = " + value)
+          console.log("place = " + place)
         } else {
           setErrorMessage(result.message)
+          Alert.alert(
+            "Error Occur !",
+            result.message,
+            [
+              { text: "Close" }
+            ]
+          );
           onChangeText('')
         }
       } catch (error) {
@@ -77,22 +112,34 @@ export default function App() {
   if (currentWeather) {
     return (
       <View style={styles.container, themeContainerStyle}>
-        <StatusBar style="auto" />
-        <TextInput style={themeTextStyle}
-          onChangeText={text => onChangeText(text)}
-          value={value}
-          placeholder={'Enter a place...'}
-          onSubmitEditing={load}
-        />
-        <LanguagePicker language={language} setLanguage={setLanguage} />
-        <View style={styles.main}>
-          <UnitsPicker unitSystem={unitSystem} setUnitSystem={setUnitSystem} />
-          <WeatherInfo currentWeather={currentWeather} />
-          <ReloadIcon load={load} />
-        </View>
-        <Text style={styles.line}>──────────────────────────</Text>
-        <ScrollView contentContainerStyle={styles.container}>
-          <WeatherDetails currentWeather={currentWeather} unitSystem={unitSystem} language={language} />
+        <ScrollView contentContainerStyle={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }>
+          <StatusBar style="auto" />
+          <TextInput style={themeTextStyle}
+            onChangeText={text => onChangeText(text)}
+            value={value}
+            placeholder={'Enter a place...'}
+            onSubmitEditing={load}
+          />
+          <View style={styles.main}>
+            <View >
+              <UnitsPicker unitSystem={unitSystem} setUnitSystem={setUnitSystem} />
+            </View>
+            <WeatherInfo currentWeather={currentWeather} />
+            <View>
+              <LanguagePicker language={language} setLanguage={setLanguage} />
+              <ReloadIcon load={load} />
+            </View>
+          </View>
+          <Text style={styles.line}>──────────────────────────</Text>
+          <ScrollView contentContainerStyle={styles.container}>
+            <WeatherDetails currentWeather={currentWeather} unitSystem={unitSystem} language={language} />
+          </ScrollView>
         </ScrollView>
       </View>
     )

@@ -18,19 +18,50 @@ export default function WeatherInfo({ currentWeather }) {
     const themeTextStyle =
         colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
 
-    const currentTime = (timezone) => {
+    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    function hour(hours) {
+        if (hours > 12) {
+            return hours = hours - 12;
+        } else if (hours == 0) {
+            return hours = 12;
+        } else if (hours < 10) {
+            return hours = "0" + hours;
+        } else {
+            return hours;
+        }
+    }
+
+    const currentTime = (timezone, key) => {
         const current = new Date();
-        const date = new Date((current.getTime() + (timezone * 1000)) - 28800000);
-        const result = date.toLocaleString('en-US', { weekday: "long", hour: 'numeric', minute: 'numeric', hour12: true });
+        const date = new Date((current.getTime() + (timezone * 1000)) + (current.getTimezoneOffset() * 1000 * 60));
+        /* var localTime = current.getTime()
+         var localOffset = current.getTimezoneOffset() * 60000
+         var utc = localTime + localOffset
+         var atlanta = utc + (1000 * timezone)
+         var date = new Date(atlanta)*/
+
+        //console.log(current.toLocaleString())
+        //console.log(date.toLocaleString())
+        //console.log(current.getTimezoneOffset())
+        
+        let result = "@@@";
+        if (key == "week") {
+            result = weekday[date.getDay()]
+        } else if (key == "time") {
+            result = (hour(date.getHours())) + " : " + ((date.getMinutes() < 10) ? '0' + date.getMinutes() : date.getMinutes()) + " " + ((date.getHours() >= 12) ? "PM" : "AM");
+        }
         return result
     }
+
 
     return (
         <View style={styles.weatherInfo}>
             <Text style={themeTextStyle}>{name}</Text>
-            <Text style={styles.currentTimeText, themeTextStyle}>{currentTime(timezone)}</Text>
+            <Text style={styles.currentTimeText, themeTextStyle}>{currentTime(timezone, "week")}</Text>
+            <Text style={styles.currentTimeText, themeTextStyle}>{currentTime(timezone, "time")}</Text>
             <Image style={styles.weatherIcon} source={{ uri: iconUrl }} />
-            <Text style={styles.textPrimary}>{temp}°</Text>
+            <Text style={styles.textPrimary}> {temp}°</Text>
             <Text style={styles.weatherDescription, themeTextStyle}>{description}</Text>
             <Text style={styles.textSecondary}>{main}</Text>
         </View>

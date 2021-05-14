@@ -1,11 +1,13 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View,TouchableOpacity} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
 export default function ReloadIcon({ load }) {
   return (
     <View>
-      <Ionicons onPress={load} name="refresh-circle-outline" size={40} color="red" />
+      <TouchableOpacity>
+      <Ionicons onPress={load} name="refresh-circle-outline" size={40} color="green" />
+      </TouchableOpacity>
     </View>
   )
 }

@@ -80,7 +80,7 @@ export default function WeatherDetails({ currentWeather, unitSystem, language })
 			<View style={styles.weatherDetailsRow}>
 				<View style={styles.weatherDetailsBox}>
 					<Ionicons name="body" size={30} color={PRIMARY_COLOR} />
-					<Text style={styles.textSecond}> {i18n.t('feelsLike')} : </Text>
+					<Text style={styles.textSecond} > {i18n.t('feelsLike')} : </Text>
 				</View>
 				<View>
 					<Text style={styles.detailText}>{feels_like}°</Text>
